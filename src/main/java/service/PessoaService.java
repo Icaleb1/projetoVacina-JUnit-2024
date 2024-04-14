@@ -5,11 +5,15 @@ import java.util.List;
 import exception.VacinacaoException;
 import model.entity.Pessoa;
 import model.repository.PessoaRepository;
+import model.repository.VacinacaoRepository;
 
 
 public class PessoaService {
-
+	
+private VacinacaoRepository vacinacaoRepository = new VacinacaoRepository();
 private PessoaRepository repository = new PessoaRepository();
+
+
 	
 	public Pessoa salvar(Pessoa novaPessoa) throws VacinacaoException {
 		validarCamposObrigatorios(novaPessoa);
@@ -67,7 +71,9 @@ private PessoaRepository repository = new PessoaRepository();
 		}
 	}
 	
-	public boolean excluir(int id) {
+	public boolean excluir(int id) throws VacinacaoException {
+		pessoaFoiVacinada(id);
+		
 		return repository.excluir(id);
 	}
 	
@@ -80,5 +86,11 @@ private PessoaRepository repository = new PessoaRepository();
 		return repository.consultarPorId(id);
 	}
 	
+	private void pessoaFoiVacinada(int id) throws VacinacaoException {
+		String msg = "";
+		if (!vacinacaoRepository.consultarPorIdPessoa(id).isEmpty()) {
+			throw new VacinacaoException("Pessoa vacinada não pode ser excluída!");
+		}
+	}
 	
 }

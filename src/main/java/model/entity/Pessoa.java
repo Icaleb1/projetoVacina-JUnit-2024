@@ -12,6 +12,7 @@ public class Pessoa {
 	private String cpf;
 	private int tipoPessoa;
 	private Pais pais;
+	private double media;
 //	private List<Vacinacao> vacinacoes;     
 		
 	public Pessoa() {

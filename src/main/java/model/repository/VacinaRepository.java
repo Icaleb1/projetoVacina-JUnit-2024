@@ -19,8 +19,8 @@ public class VacinaRepository {
 
 
 	public Vacina salvar(Vacina novaVacina) {
-		String sql = " INSERT INTO vacina(id_pesquisador, id_pais_origem, nome, estagio_pesquisa, data_inicio) "
-				   + " VALUES(?, ?, ?, ?, ?) ";
+		String sql = " INSERT INTO vacina(id_pesquisador, id_pais_origem, nome, estagio_pesquisa, data_inicio, media) "
+				   + " VALUES(?, ?, ?, ?, ?, ?) ";
 		Connection conexao = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatementWithPk(conexao, sql);
 		
@@ -30,6 +30,7 @@ public class VacinaRepository {
 			stmt.setString(3, novaVacina.getNome());
 			stmt.setInt(4, novaVacina.getEstagioPesquisa());
 			stmt.setDate(5, Date.valueOf(novaVacina.getDataInicio()));
+			stmt.setDouble(6, novaVacina.getMedia());
 			
 			stmt.execute();
 			ResultSet resultado = stmt.getGeneratedKeys();
@@ -66,7 +67,7 @@ public class VacinaRepository {
 	public boolean alterar(Vacina vacinaEditada) {
 		boolean alterou = false;
 		String query = " UPDATE vacina "
-				     + " SET id_pesquisador=?, id_pais_origem=?, nome=?, estagio_pesquisa=?, data_inicio=? "
+				     + " SET id_pesquisador=?, id_pais_origem=?, nome=?, estagio_pesquisa=?, data_inicio=?, media=? "
 				     + " WHERE id=? ";
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, query);
@@ -76,9 +77,10 @@ public class VacinaRepository {
 			stmt.setString(3, vacinaEditada.getNome());
 			stmt.setInt(4, vacinaEditada.getEstagioPesquisa());
 			stmt.setDate(5, Date.valueOf(vacinaEditada.getDataInicio()));
+			stmt.setDouble(6, vacinaEditada.getMedia());
 			
 			
-			stmt.setInt(6, vacinaEditada.getId());
+			stmt.setInt(7, vacinaEditada.getId());
 			alterou = stmt.executeUpdate() > 0;
 		} catch (SQLException erro) {
 			System.out.println("Erro ao atualizar vacina");
@@ -109,6 +111,7 @@ public class VacinaRepository {
 				vacina.setNome(resultado.getString("NOME"));
 				vacina.setEstagioPesquisa(resultado.getInt("ESTAGIO_PESQUISA"));
 				vacina.setDataInicio(resultado.getDate("DATA_INICIO").toLocalDate()); 
+				vacina.setMedia(resultado.getDouble("MEDIA"));
 				
 				Pessoa pesquisador = pessoaRepository.consultarPorId(resultado.getInt("ID_PESQUISADOR"));
 				vacina.setPesquisadorResponsavel(pesquisador);
@@ -146,6 +149,7 @@ public class VacinaRepository {
 				vacina.setNome(resultado.getString("NOME"));
 				vacina.setEstagioPesquisa(resultado.getInt("ESTAGIO_PESQUISA"));
 				vacina.setDataInicio(resultado.getDate("DATA_INICIO").toLocalDate()); 
+				vacina.setMedia(resultado.getDouble("MEDIA"));
 				
 				Pessoa pesquisador = pessoaRepository.consultarPorId(resultado.getInt("ID_PESQUISADOR"));
 				vacina.setPesquisadorResponsavel(pesquisador);

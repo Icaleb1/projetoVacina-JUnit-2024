@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import model.entity.Vacinacao;
+import model.entity.Vacina;
 import model.repository.Banco;
 import model.repository.VacinaRepository;
 
@@ -162,5 +163,72 @@ public class VacinacaoRepository {
 		return aplicacoes;
 		
 		
+	}
+
+
+	private Vacinacao converterParaObjeto(ResultSet resultado) throws SQLException {
+		Vacinacao aplicacaoVacina = new Vacinacao();
+		aplicacaoVacina.setId(resultado.getInt("ID"));
+		aplicacaoVacina.setIdPessoa(resultado.getInt("ID_PESSOA"));
+		aplicacaoVacina.setAvaliacao(resultado.getInt("AVALIACAO"));
+		aplicacaoVacina.setDataAplicacao(resultado.getDate("DATA_APLICACAO").toLocalDate());
+		
+		VacinaRepository vacinaRepository = new VacinaRepository();
+		Vacina vacinaAplicada = 
+				vacinaRepository.consultarPorId(resultado.getInt("ID_VACINA"));
+		
+		aplicacaoVacina.setVacina(vacinaAplicada);
+		return aplicacaoVacina;
+	}
+	
+	public ArrayList<Vacinacao> consultarPorIdPessoa(int idPessoa){
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+		
+		ArrayList<Vacinacao> aplicacoes = new ArrayList<Vacinacao>();
+		ResultSet resultado = null;
+		String query = " SELECT * FROM aplicacao_vacina WHERE id_pessoa = " + idPessoa;
+		try{
+			resultado = stmt.executeQuery(query);
+
+			while(resultado.next()){
+				Vacinacao aplicacaoVacina = this.converterParaObjeto(resultado);
+				aplicacoes.add(aplicacaoVacina);
+			}
+		} catch (SQLException erro){
+			System.out.println("Erro ao consultar todas as vacinações realizadas na pessoa com id" + idPessoa);
+			System.out.println("Erro: " + erro.getMessage());
+		} finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return aplicacoes;
+	}
+
+
+	public ArrayList<Vacinacao> consultarPorIdVacina(int idVacina){
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+		
+		ArrayList<Vacinacao> aplicacoes = new ArrayList<Vacinacao>();
+		ResultSet resultado = null;
+		String query = " SELECT * FROM aplicacao_vacina WHERE id_vacina = " + idVacina;
+		try{
+			resultado = stmt.executeQuery(query);
+
+			while(resultado.next()){
+				Vacinacao aplicacaoVacina = this.converterParaObjeto(resultado);
+				aplicacoes.add(aplicacaoVacina);
+			}
+		} catch (SQLException erro){
+			System.out.println("Erro ao consultar todas as vacinações realizadas na vacina com id" + idVacina);
+			System.out.println("Erro: " + erro.getMessage());
+		} finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return aplicacoes;
 	}
 }

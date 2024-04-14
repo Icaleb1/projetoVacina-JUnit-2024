@@ -1,23 +1,33 @@
 package service;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import exception.VacinacaoException;
+import model.entity.Pessoa;
 import model.entity.Vacina;
+import model.entity.Vacinacao;
 import model.repository.VacinaRepository;
+import model.repository.VacinacaoRepository;
 
 public class VacinaService {
-
+	
+	private VacinacaoRepository vacinacaoRepository = new VacinacaoRepository();
 	private VacinaRepository repository = new VacinaRepository();
 	
 	public Vacina salvar(Vacina novaVacina){
+		
 		return repository.salvar(novaVacina);
 	}
 
 	public boolean atualizar(Vacina vacinaEditada) {
+		
 		return repository.alterar(vacinaEditada);
 	}
 
-	public boolean excluir(int id) {
+	public boolean excluir(int id) throws VacinacaoException{
+		vacinaFoiUtilizada(id);
+		
 		return repository.excluir(id);
 	}
 
@@ -28,4 +38,18 @@ public class VacinaService {
 	public List<Vacina> consultarTodas() {
 		return repository.consultarTodos();
 	}
+	
+	
+	private void vacinaFoiUtilizada(int id) throws VacinacaoException {
+		if (!vacinacaoRepository.consultarPorIdVacina(id).isEmpty()) {
+			throw new VacinacaoException("Vacina já utilizada não pode ser excluída");
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
 }

@@ -22,7 +22,7 @@ class PessoaServiceTest {
     public void salvarPessoaComNomeNuloDeveLancarExcecao() throws VacinacaoException {
 	   Pais pais = new Pais(1, "Brasil", "BR");
 	   LocalDate data = LocalDate.of(2024, 12, 8);
-       Pessoa pessoa = new Pessoa(1, "Caleb", data, 'M', "99999999999", 1, pais);
+       Pessoa pessoa = new Pessoa(1, " ", data, 'M', "99999999999", 1, pais);
        PessoaService pessoaService = new PessoaService();
 
         try {
