@@ -187,7 +187,7 @@ public class VacinacaoRepository {
 		
 		ArrayList<Vacinacao> aplicacoes = new ArrayList<Vacinacao>();
 		ResultSet resultado = null;
-		String query = " SELECT * FROM aplicacao_vacina WHERE id_pessoa = " + idPessoa;
+		String query = " SELECT * FROM vacinacao WHERE id_pessoa = " + idPessoa;
 		try{
 			resultado = stmt.executeQuery(query);
 
@@ -196,7 +196,7 @@ public class VacinacaoRepository {
 				aplicacoes.add(aplicacaoVacina);
 			}
 		} catch (SQLException erro){
-			System.out.println("Erro ao consultar todas as vacinações realizadas na pessoa com id" + idPessoa);
+			System.out.println("Erro ao consultar todas as vacinações realizadas na pessoa com id: " + idPessoa);
 			System.out.println("Erro: " + erro.getMessage());
 		} finally {
 			Banco.closeResultSet(resultado);
@@ -213,7 +213,7 @@ public class VacinacaoRepository {
 		
 		ArrayList<Vacinacao> aplicacoes = new ArrayList<Vacinacao>();
 		ResultSet resultado = null;
-		String query = " SELECT * FROM aplicacao_vacina WHERE id_vacina = " + idVacina;
+		String query = " SELECT * FROM vacinacao WHERE id_vacina = " + idVacina;
 		try{
 			resultado = stmt.executeQuery(query);
 

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import model.entity.Pais;
 import model.entity.Pessoa;
 import model.entity.Vacina;
+import model.entity.VacinaSeletor;
 import model.repository.Banco;
 import model.repository.PaisRepository;
 import model.repository.PessoaRepository;
@@ -172,4 +173,64 @@ public class VacinaRepository {
 		}
 		return vacinas;
 	}
+
+	public ArrayList<Vacina> consultarComFiltro(VacinaSeletor seletor){
+		ArrayList<Vacina> vacinas = new ArrayList<>();
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+		
+		ResultSet resultado = null;
+		String query = " select v.* from vacina v "
+				 	+ " inner join pais p on v.id_pais = p.id "
+				 	+ " inner join pessoa pe on v.id_pesquisador = pe.id  ";
+		boolean primeiro = true;
+		if (seletor.getNomeVacina() != null) {
+			if (primeiro) {
+				query += " WHERE ";
+			}else {
+				query += " AND ";
+			}
+			query += "upper(v.nome) LIKE UPPER('%" + seletor.getNomeVacina() + "%')";
+			primeiro = false;
+		}
+		
+
+		if(seletor.getNomePais() != null) {
+			if(primeiro) {
+				query += " WHERE ";
+			}else {
+				query += " AND ";
+			}
+			query += " upper(p.nome) LIKE UPPER('%" + seletor.getNomePais() + "%')";
+		}
+		
+		try{
+			resultado = stmt.executeQuery(query);
+			PessoaRepository pessoaRepository = new PessoaRepository();
+			while(resultado.next()){
+				Vacina vacina = new Vacina();
+				vacina.setId(Integer.parseInt(resultado.getString("ID")));
+				vacina.setNome(resultado.getString("NOME"));
+
+				PaisRepository paisRepository = new PaisRepository();
+				vacina.setPais(paisRepository.consultarPorId(resultado.getInt("ID_PAIS")));
+
+				vacina.setEstagioPesquisa(resultado.getInt("ESTAGIO_PESQUISA"));
+				vacina.setDataInicio(resultado.getDate("DATA_INICIO").toLocalDate()); 
+				Pessoa pesquisador = pessoaRepository.consultarPorId(resultado.getInt("ID_PESQUISADOR"));
+				vacina.setPesquisadorResponsavel(pesquisador);
+				vacinas.add(vacina);
+			}
+		} catch (SQLException erro){
+			System.out.println("Erro ao consultar todas as vacinas");
+			System.out.println("Erro: " + erro.getMessage());
+		} finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return vacinas;
+		
+	}
+	
 }

@@ -180,8 +180,10 @@ public class PessoaRepository {
 		String query = " SELECT count(id) FROM pessoa WHERE cpf = " + cpf;
 		
 		try {
-			ResultSet resultado = stmt.executeQuery(query);
-			cpfJaUtilizado = (resultado.getInt(1) > 0);
+			 ResultSet resultado = stmt.executeQuery(query);
+		        if (resultado.next()) { // Avance para a primeira linha
+		            cpfJaUtilizado = (resultado.getInt(1) > 0);
+		        }
 		} catch (SQLException e) {
 			System.out.println("Erro ao consultar CPF. Causa: " + e.getMessage());
 		}

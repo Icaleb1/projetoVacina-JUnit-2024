@@ -31,7 +31,7 @@ public class VacinacaoController {
 	@Path("/atualizar")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-	public boolean alterar(Vacinacao vacinaEditada) {
+	public boolean alterar(Vacinacao vacinaEditada) throws VacinacaoException {
 		return vacinacaoService.alterar(vacinaEditada);
 	}
 

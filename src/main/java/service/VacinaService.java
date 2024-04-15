@@ -6,6 +6,7 @@ import java.util.List;
 import exception.VacinacaoException;
 import model.entity.Pessoa;
 import model.entity.Vacina;
+import model.entity.VacinaSeletor;
 import model.entity.Vacinacao;
 import model.repository.VacinaRepository;
 import model.repository.VacinacaoRepository;
@@ -44,6 +45,10 @@ public class VacinaService {
 		if (!vacinacaoRepository.consultarPorIdVacina(id).isEmpty()) {
 			throw new VacinacaoException("Vacina já utilizada não pode ser excluída");
 		}
+	}
+	
+	public List<Vacina> consultarComFiltros(VacinaSeletor seletor) {
+		return repository.consultarComFiltro(seletor);
 	}
 	
 	

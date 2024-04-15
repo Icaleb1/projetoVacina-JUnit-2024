@@ -7,6 +7,7 @@ import exception.VacinacaoException;
 import model.entity.Pessoa;
 import model.entity.Vacina;
 import model.entity.Vacinacao;
+import model.repository.PessoaRepository;
 import model.repository.VacinaRepository;
 import model.repository.VacinacaoRepository;
 
@@ -14,30 +15,22 @@ public class VacinacaoService {
 	private static final int NOTA_MAXIMA=5;
 	private VacinacaoRepository vacinacaoRepository = new VacinacaoRepository();
 	private VacinaRepository vacinaRepository = new VacinaRepository();
-	
+
 	public Vacinacao salvar(Vacinacao novaVacinacao) throws VacinacaoException{
 		
-		if(novaVacinacao.getIdPessoa() == 0 
-				|| novaVacinacao.getVacina() == null
-				|| novaVacinacao.getVacina().getId() == 0) {
-			throw new VacinacaoException("Informe a o id da pessoa e a vacina da aplicação");
-		}
-		
-		novaVacinacao.setDataAplicacao(LocalDate.now());
-		
-		if(novaVacinacao.getAvaliacao() == 0) {
-			novaVacinacao.setAvaliacao(NOTA_MAXIMA);
-		}
-		
+		validarDadosVacinacao(novaVacinacao);
 		recalcularMediaVacina(novaVacinacao);
+		ValidarRecebimentoVacina(novaVacinacao);
+		
 		
 		return  vacinacaoRepository.salvar(novaVacinacao);
 		
 	}
 	
-	public boolean alterar(Vacinacao vacinacao) {
-		
+	public boolean alterar(Vacinacao vacinacao) throws VacinacaoException {
+		validarDadosVacinacao(vacinacao);
 		recalcularMediaVacina(vacinacao);
+		ValidarRecebimentoVacina(vacinacao);
 		
 		return vacinacaoRepository.alterar(vacinacao);
 	}
@@ -55,41 +48,63 @@ public class VacinacaoService {
 	}
 	
 	private void recalcularMediaVacina(Vacinacao vacinacao) {
-		ArrayList<Vacinacao> aplicacoesDaVacina = vacinacaoRepository.consultarPorIdVacina(vacinacao.getVacina().getId());
-
-		int somatorio = 0;
-		double novaMedia = 0;
+		ArrayList<Vacinacao> dosesAplicadas = vacinacaoRepository.consultarPorIdVacina(vacinacao.getVacina().getId());
 		
-		for (Vacinacao dose: aplicacoesDaVacina) {
-			somatorio += dose.getAvaliacao();
+		double novaMediaVacina = 0;
+		double somatorioNotasDaVacina = 0;
+		
+		for(Vacinacao dose: dosesAplicadas) {
+			somatorioNotasDaVacina += dose.getAvaliacao();
 		}
-
-		novaMedia = (somatorio + vacinacao.getAvaliacao()) / (aplicacoesDaVacina.size() + 1);
 		
-		vacinacao.getVacina().setMedia(novaMedia);
-		vacinaRepository.alterar(vacinacao.getVacina());
+		novaMediaVacina = (somatorioNotasDaVacina + vacinacao.getAvaliacao()) / (dosesAplicadas.size() + 1);
+		
+		VacinaRepository vacinaRepository = new VacinaRepository();
+		Vacina vacinaAplicada = vacinaRepository.consultarPorId(vacinacao.getVacina().getId());
+		vacinaAplicada.setMedia(novaMediaVacina);
+		
+		vacinaRepository.alterar(vacinaAplicada);
+		
+		vacinacao.setVacina(vacinaAplicada);
 	}
 	
 	
-	public void receberVacina(Vacinacao vacinacao) {
-		Pessoa pessoa = new Pessoa();
+	public void ValidarRecebimentoVacina(Vacinacao vacinacao) throws VacinacaoException {
+		Vacina vac = vacinacao.getVacina();
+		Pessoa paciente = new PessoaRepository().consultarPorId(vacinacao.getIdPessoa());
 		
+		boolean podeReceberDose = false;
+		if(vac.getEstagioPesquisa() == Vacina.ESTAGIO_INICIAL && paciente.getTipoPessoa() == Pessoa.PESQUISADOR) {
+			podeReceberDose = true;
+		}
 		
-		Vacina vacina = new Vacina();
-		String mensagemValidacao = "";
-
-		switch(vacina.getEstagioPesquisa()) {
-		case 1: 
-			if(pessoa.getTipoPessoa() != 1) {
-				mensagemValidacao = " Estágio inicial somente para pesquisadores";
-			};
-		break;
-		case 2:
-			if(pessoa.getTipoPessoa() != 1 || pessoa.getTipoPessoa() != 2) {
-				mensagemValidacao = "Estágio de teste somente para pesquisadores ou voluntários";
-			}
-		break;
+		if(vac.getEstagioPesquisa() == Vacina.ESTAGIO_TESTES && 
+				(paciente.getTipoPessoa() == Pessoa.PESQUISADOR || paciente.getTipoPessoa() == Pessoa.VOLUNTARIO)) {
+			podeReceberDose = true;
+		}
+		
+		if(vac.getEstagioPesquisa() == Vacina.ESTAGIO_APLICACAO_MASSA) {
+			podeReceberDose = true;
+		}
+		
+		if(!podeReceberDose) {
+			throw new VacinacaoException("Usuário sem permissão para receber a vacina");
 		}
 	}
+	private void validarDadosVacinacao(Vacinacao novaVacinacao) throws VacinacaoException {
+		if(novaVacinacao.getIdPessoa() == 0 
+				|| novaVacinacao.getVacina() == null
+				|| novaVacinacao.getVacina().getId() == 0) {
+			throw new VacinacaoException("Informe a o id da pessoa e a vacina da aplicação");
+		}
+		
+		novaVacinacao.setDataAplicacao(LocalDate.now());
+		
+		if(novaVacinacao.getAvaliacao() == 0) {
+			novaVacinacao.setAvaliacao(NOTA_MAXIMA);
+		}
+	}
+	
+
 	
 }

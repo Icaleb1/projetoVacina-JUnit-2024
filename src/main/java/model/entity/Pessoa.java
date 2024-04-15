@@ -3,7 +3,9 @@ package model.entity;
 import java.time.LocalDate;
 
 public class Pessoa {
-
+	public static final int PESQUISADOR = 1;
+	public static final int VOLUNTARIO = 2;
+	public static final int PUBLICO_GERAL = 3;
 	
 	private int id;
 	private String nome;

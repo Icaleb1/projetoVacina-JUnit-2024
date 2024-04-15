@@ -7,6 +7,9 @@ import model.entity.Pessoa;
 
 public class Vacina {
 
+	public static final int ESTAGIO_INICIAL = 1;
+	public static final int ESTAGIO_TESTES = 2;
+	public static final int ESTAGIO_APLICACAO_MASSA = 3;
 	
 	
 	private int id;
@@ -31,7 +34,7 @@ public class Vacina {
 		this.estagioPesquisa = estagioPesquisa;
 		this.dataInicio = dataInicio;
 		this.pais = pais;
-		this.setMedia(media);
+		this.media= media;
 	}
 
 	public int getId() {
