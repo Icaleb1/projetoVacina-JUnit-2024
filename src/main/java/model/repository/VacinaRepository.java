@@ -181,7 +181,7 @@ public class VacinaRepository {
 		
 		ResultSet resultado = null;
 		String query = " select v.* from vacina v "
-				 	+ " inner join pais p on v.id_pais = p.id "
+				 	+ " inner join pais p on v.id_pais_origem = p.id "
 				 	+ " inner join pessoa pe on v.id_pesquisador = pe.id  ";
 		boolean primeiro = true;
 		if (seletor.getNomeVacina() != null) {
@@ -202,7 +202,29 @@ public class VacinaRepository {
 				query += " AND ";
 			}
 			query += " upper(p.nome) LIKE UPPER('%" + seletor.getNomePais() + "%')";
+			primeiro = false;
 		}
+		
+		if (seletor.getNomePesquisador() != null) {
+			if(primeiro) {
+				query += " WHERE ";
+			} else {
+				query += " AND ";
+			}
+			query += "upper(pe.nome) LIKE UPPER('%" + seletor.getNomePesquisador() + "%')";
+			primeiro = false;
+		}
+		
+		if(seletor.getDataInicioSelecao() != null & seletor.getDataFinalSelecao() != null) {
+			if(primeiro) {
+				query += " WHERE ";
+			}else {
+				query += " AND ";
+			}
+			query += " data_inicio between '" + seletor.getDataInicioSelecao() + "' and '" + seletor.getDataFinalSelecao() + "';";
+			primeiro = false;
+		}
+		
 		
 		try{
 			resultado = stmt.executeQuery(query);
@@ -213,7 +235,7 @@ public class VacinaRepository {
 				vacina.setNome(resultado.getString("NOME"));
 
 				PaisRepository paisRepository = new PaisRepository();
-				vacina.setPais(paisRepository.consultarPorId(resultado.getInt("ID_PAIS")));
+				vacina.setPais(paisRepository.consultarPorId(resultado.getInt("ID_PAIS_ORIGEM")));
 
 				vacina.setEstagioPesquisa(resultado.getInt("ESTAGIO_PESQUISA"));
 				vacina.setDataInicio(resultado.getDate("DATA_INICIO").toLocalDate()); 
