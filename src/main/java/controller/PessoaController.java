@@ -53,6 +53,12 @@ public class PessoaController {
 		 return service.consultarPorId(id);
 	}
 	
+	@GET
+	@Path("/{pesquisadores}")
+	public List<Pessoa> consultarPesquisadores(){
+		return service.consultarPesquisadores();
+	}
+	
 	
 }
 

@@ -92,5 +92,9 @@ private PessoaRepository repository = new PessoaRepository();
 			throw new VacinacaoException("Pessoa vacinada não pode ser excluída!");
 		}
 	}
+
+	public List<Pessoa> consultarPesquisadores() {
+		return this.repository.consultarPesquisadores();
+	}
 	
 }

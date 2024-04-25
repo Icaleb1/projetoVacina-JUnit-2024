@@ -23,7 +23,7 @@ public class VacinaController {
 
 	private VacinaService service = new VacinaService();
 	
-
+	
 	@POST
 	@Path("/filtro")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -33,6 +33,7 @@ public class VacinaController {
 	}
 	
 	@POST
+	@Path("/salvar")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Vacina salvar(Vacina novaVacina){
