@@ -54,11 +54,9 @@ public class PessoaController {
 	}
 	
 	@GET
-	@Path("/{pesquisadores}")
+	@Path("/pesquisadores")
 	public List<Pessoa> consultarPesquisadores(){
 		return service.consultarPesquisadores();
 	}
-	
-	
 }
 

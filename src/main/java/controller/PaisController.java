@@ -5,6 +5,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import model.entity.Pais;
@@ -23,7 +24,7 @@ public class PaisController {
 	
 	@GET
 	@Path("/{id}")
-	public Pais consultarPorId(int id) {
+	public Pais consultarPorId(@PathParam("id") int id) {
 		return paisService.consultarPorId(id);
 	}
 	
