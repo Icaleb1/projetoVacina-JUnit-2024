@@ -199,7 +199,7 @@ public class PessoaRepository {
 		Statement stmt = Banco.getStatement(conn);
 		
 		ResultSet resultado = null;
-		String query = " SELECT * FROM pessoa WHERE tipo = " + Pessoa.PESQUISADOR;
+		String query = " SELECT * FROM pessoa WHERE tipo_pessoa = " + Pessoa.PESQUISADOR;
 		
 		try{
 			PaisRepository paisRepository = new PaisRepository();

@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.List;
+
 import exception.VacinacaoException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -9,6 +11,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import model.entity.Pais;
+import model.entity.Pessoa;
 import service.PaisService;
 
 @Path ("/pais")
@@ -26,6 +29,12 @@ public class PaisController {
 	@Path("/{id}")
 	public Pais consultarPorId(@PathParam("id") int id) {
 		return paisService.consultarPorId(id);
+	}
+	
+	@GET
+	@Path("/todas")
+	public List<Pais> consultarTodas(){
+		return paisService.consultarTodas();
 	}
 	
 }

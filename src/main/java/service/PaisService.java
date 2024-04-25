@@ -1,7 +1,10 @@
 package service;
 
+import java.util.List;
+
 import exception.VacinacaoException;
 import model.entity.Pais;
+import model.entity.Pessoa;
 import model.repository.PaisRepository;
 
 public class PaisService {
@@ -37,5 +40,9 @@ public class PaisService {
 		}
 		
 		
+	}
+
+	public List<Pais> consultarTodas(){
+		return repository.consultarTodos();
 	}
 }
