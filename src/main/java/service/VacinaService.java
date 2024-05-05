@@ -6,8 +6,8 @@ import java.util.List;
 import exception.VacinacaoException;
 import model.entity.Pessoa;
 import model.entity.Vacina;
-import model.entity.VacinaSeletor;
 import model.entity.Vacinacao;
+import model.entity.seletores.VacinaSeletor;
 import model.repository.VacinaRepository;
 import model.repository.VacinacaoRepository;
 

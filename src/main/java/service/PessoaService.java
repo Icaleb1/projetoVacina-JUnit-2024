@@ -4,6 +4,9 @@ import java.util.List;
 
 import exception.VacinacaoException;
 import model.entity.Pessoa;
+import model.entity.Vacina;
+import model.entity.seletores.PessoaSeletor;
+import model.entity.seletores.VacinaSeletor;
 import model.repository.PessoaRepository;
 import model.repository.VacinacaoRepository;
 
@@ -95,6 +98,10 @@ private PessoaRepository repository = new PessoaRepository();
 
 	public List<Pessoa> consultarPesquisadores() {
 		return this.repository.consultarPesquisadores();
+	}
+	
+	public List<Pessoa> consultarComFiltros(PessoaSeletor seletor) {
+		return repository.consultarComFiltro(seletor);
 	}
 	
 }

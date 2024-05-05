@@ -13,7 +13,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import model.entity.Vacina;
-import model.entity.VacinaSeletor;
+import model.entity.seletores.VacinaSeletor;
 import service.VacinaService;
 	
 
@@ -33,7 +33,6 @@ public class VacinaController {
 	}
 	
 	@POST
-	@Path("/salvar")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Vacina salvar(Vacina novaVacina){

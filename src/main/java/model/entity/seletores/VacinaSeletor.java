@@ -1,4 +1,4 @@
-package model.entity;
+package model.entity.seletores;
 
 import java.time.LocalDate;
 

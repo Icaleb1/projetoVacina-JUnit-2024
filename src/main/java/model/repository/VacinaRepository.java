@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import model.entity.Pais;
 import model.entity.Pessoa;
 import model.entity.Vacina;
-import model.entity.VacinaSeletor;
+import model.entity.seletores.VacinaSeletor;
 import model.repository.Banco;
 import model.repository.PaisRepository;
 import model.repository.PessoaRepository;

@@ -11,6 +11,9 @@ import java.util.List;
 
 import model.entity.Pais;
 import model.entity.Pessoa;
+import model.entity.Vacina;
+import model.entity.seletores.PessoaSeletor;
+import model.entity.seletores.VacinaSeletor;
 
 public class PessoaRepository {
 
@@ -227,5 +230,86 @@ public class PessoaRepository {
 		}
 		return pessoas;
 	}
+	
+	
+	public ArrayList<Pessoa> consultarComFiltro(PessoaSeletor seletor){
+		ArrayList<Pessoa> pessoas = new ArrayList<>();
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+		
+		ResultSet resultado = null;
+		String query = " select * from pessoa"
+				 	+ " inner join pais on pessoa.id_pais = pais.id ";
+		boolean primeiro = true;
+		if (seletor.getNomePessoa() != null) {
+			if (primeiro) {
+				query += " WHERE ";
+			}else {
+				query += " AND ";
+			}
+			query += "upper(pessoa.nome) LIKE UPPER('%" + seletor.getNomePessoa() + "%')";
+			primeiro = false;
+		}
+		
+
+		if(seletor.getNomePais() != null) {
+			if(primeiro) {
+				query += " WHERE ";
+			}else {
+				query += " AND ";
+			}
+			query += " upper(pais.nome) LIKE UPPER('%" + seletor.getNomePais() + "%')";
+			primeiro = false;
+		}
+		
+		if (seletor.getSexoPessoa() != null) {
+			if(primeiro) {
+				query += " WHERE ";
+			} else {
+				query += " AND ";
+			}
+			query += "upper(pessoa.sexo) LIKE UPPER('%" + seletor.getSexoPessoa() + "%')";
+			primeiro = false;
+		}
+		
+		if(seletor.getDataInicioSelecao() != null & seletor.getDataFinalSelecao() != null) {
+			if(primeiro) {
+				query += " WHERE ";
+			}else {
+				query += " AND ";
+			}
+			query += " data_nascimento between '" + seletor.getDataInicioSelecao() + "' and '" + seletor.getDataFinalSelecao() + "';";
+			primeiro = false;
+		}
+		
+		
+		try{
+			resultado = stmt.executeQuery(query);
+			PessoaRepository pessoaRepository = new PessoaRepository();
+			while(resultado.next()){
+				Pessoa pessoa = new Pessoa();
+				pessoa.setId(Integer.parseInt(resultado.getString("ID")));
+				pessoa.setNome(resultado.getString("NOME"));
+
+				PaisRepository paisRepository = new PaisRepository();
+				pessoa.setPais(paisRepository.consultarPorId(resultado.getInt("ID_PAIS")));
+				pessoa.setDataNascimento(resultado.getDate("DATA_NASCIMENTO").toLocalDate()); 
+				pessoa.setCpf(resultado.getString("CPF"));
+				pessoa.setSexo(resultado.getString("SEXO").charAt(0));
+				pessoa.setTipoPessoa(resultado.getInt("TIPO_PESSOA"));
+				pessoas.add(pessoa);
+			}
+		} catch (SQLException erro){
+			System.out.println("Erro ao consultar todas as vacinas");
+			System.out.println("Erro: " + erro.getMessage());
+		} finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return pessoas;
+		
+	}
+	
 	
 }
