@@ -51,6 +51,14 @@ public class VacinaService {
 		return repository.consultarComFiltro(seletor);
 	}
 	
+	public int contarTotalRegistros(VacinaSeletor seletor) {
+		return repository.contarTotalRegistros(seletor);
+	}
+	
+	public int contarPaginas(VacinaSeletor seletor) {
+		return repository.contarPaginas(seletor);
+	}
+	
 	
 	
 	

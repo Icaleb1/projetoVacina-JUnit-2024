@@ -35,7 +35,7 @@ class PessoaServiceTest {
         	//O MÉTODO "assertEquals" VERIFICA SE A EXCESSÃO CAPTURADA É A EXCESSÃO ESPERADA
         	// CASO SEJA O TESTE PASSOU, SENÃO O TESTE FALHA
             assertNotEquals("Preencha os seguintes campos: Nome Obrigatório!", e.getMessage());
-            //MÉTODO ALTERADO PARA TESTE FALHAR
+            //MÉTODO ALTERADO PARA TESTE FALHAR 
         }
     }
 }

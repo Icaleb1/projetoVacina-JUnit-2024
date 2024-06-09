@@ -2,13 +2,21 @@ package model.entity.seletores;
 
 import java.time.LocalDate;
 
-public class VacinaSeletor {
+public class VacinaSeletor extends BaseSeletor{
 	
-	private String nomePais;
+	private String nomePais; 
 	private String nomePesquisador;
 	private String nomeVacina;
 	private LocalDate dataInicioSelecao;
 	private LocalDate dataFinalSelecao;
+	
+	public boolean temFiltro() {
+		return (this.nomeVacina != null && this.nomeVacina.trim().length() > 0)
+				|| (this.nomePais != null && this.nomePais.trim().length() > 0)
+				|| (this.nomePesquisador != null && this.nomePesquisador.trim().length() > 0)
+				|| (this.dataInicioSelecao != null)
+				|| (this.dataFinalSelecao != null);
+	}
 	
 	public VacinaSeletor() {
 		super();

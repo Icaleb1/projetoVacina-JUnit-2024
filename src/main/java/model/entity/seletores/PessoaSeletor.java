@@ -2,7 +2,7 @@ package model.entity.seletores;
 
 import java.time.LocalDate;
 
-public class PessoaSeletor {
+public class PessoaSeletor extends BaseSeletor {
 	
 	private String nomePessoa;
 	private String nomePais;

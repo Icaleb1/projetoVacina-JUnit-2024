@@ -281,6 +281,7 @@ public class PessoaRepository {
 			query += " data_nascimento between '" + seletor.getDataInicioSelecao() + "' and '" + seletor.getDataFinalSelecao() + "';";
 			primeiro = false;
 		}
+
 		
 		
 		try{
