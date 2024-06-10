@@ -231,7 +231,6 @@ public class PessoaRepository {
 		return pessoas;
 	}
 	
-	
 	public ArrayList<Pessoa> consultarComFiltro(PessoaSeletor seletor){
 		ArrayList<Pessoa> pessoas = new ArrayList<>();
 		Connection conn = Banco.getConnection();
